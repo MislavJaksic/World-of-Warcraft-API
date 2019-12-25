@@ -18,21 +18,24 @@ from helper.file_cacher import FileCacher
 from blizzard_api import BlizzardApi
 
 
-logging.basicConfig(filename="output.log", filemode="a", format="%(asctime)s - %(message)s", level=logging.DEBUG)
+logging.basicConfig(filename="app.log", filemode="a", format="%(asctime)s - %(message)s", level=logging.DEBUG)
 
 
 def main(args):
     token = AppAuth()
-    requester = Requester(token)
-
     cache_path = Path() / "cache"
     cacher = FileCacher(cache_path)
-    api = BlizzardApi(requester, cacher)
+    requester = Requester(token, cacher)
+    api = BlizzardApi(requester)
+
+    # mounts = api.get_mounts()
+    # for mount in mounts:
+    #     print(mount.name)
+    #     print("  " + str(mount.source))
 
     pets = api.get_pets()
     for pet in pets:
         print(pet)
-
 
 def run():
     sys.exit(main(sys.argv[1:]))
